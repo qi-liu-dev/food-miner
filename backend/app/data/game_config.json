@@ -1,0 +1,6 @@
+{
+  "gems_per_game": 6,
+  "max_catches_per_user_per_day": 1,
+  "max_claims_per_session": 1,
+  "guaranteed_catch": true
+}

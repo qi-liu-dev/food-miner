@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+backend/food_miner.db
+backend/*.db
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Local environment
+.env
+.env.local
+.DS_Store

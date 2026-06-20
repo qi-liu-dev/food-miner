@@ -1,0 +1,252 @@
+[
+  {
+    "restaurant_id": "r_korean_01",
+    "name": "Seoul Kickoff Kitchen",
+    "primary_category": "Korean",
+    "available": true,
+    "status": "quiet",
+    "is_new": false,
+    "campaign_tags": [
+      "matchday"
+    ],
+    "max_discount_percent": 12,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_japanese_01",
+    "name": "Tokyo Bento Lab",
+    "primary_category": "Japanese",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [],
+    "max_discount_percent": 10,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_thai_01",
+    "name": "Bangkok Protein Grill",
+    "primary_category": "Thai",
+    "available": true,
+    "status": "quiet",
+    "is_new": false,
+    "campaign_tags": [],
+    "max_discount_percent": 11,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_italian_01",
+    "name": "Forza Pizza",
+    "primary_category": "Italian",
+    "available": true,
+    "status": "normal",
+    "is_new": true,
+    "campaign_tags": [
+      "matchday"
+    ],
+    "max_discount_percent": 15,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_wings_01",
+    "name": "Wing Arena",
+    "primary_category": "Wings",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [
+      "matchday"
+    ],
+    "max_discount_percent": 12,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_bbq_01",
+    "name": "Local Smokehouse",
+    "primary_category": "BBQ",
+    "available": true,
+    "status": "quiet",
+    "is_new": false,
+    "campaign_tags": [
+      "matchday"
+    ],
+    "max_discount_percent": 13,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_burgers_01",
+    "name": "Kickoff Burger Club",
+    "primary_category": "Burgers",
+    "available": true,
+    "status": "busy",
+    "is_new": false,
+    "campaign_tags": [
+      "matchday"
+    ],
+    "max_discount_percent": 8,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_mexican_01",
+    "name": "Taco Stadium",
+    "primary_category": "Mexican",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [
+      "matchday"
+    ],
+    "max_discount_percent": 10,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_vietnamese_01",
+    "name": "Saigon Bowl",
+    "primary_category": "Vietnamese",
+    "available": true,
+    "status": "normal",
+    "is_new": true,
+    "campaign_tags": [],
+    "max_discount_percent": 10,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_poke_01",
+    "name": "Poke Lab",
+    "primary_category": "Poke",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [],
+    "max_discount_percent": 9,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_sushi_01",
+    "name": "Sushi Express",
+    "primary_category": "Sushi",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [],
+    "max_discount_percent": 9,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_chinese_01",
+    "name": "Red Box Kitchen",
+    "primary_category": "Chinese",
+    "available": true,
+    "status": "quiet",
+    "is_new": false,
+    "campaign_tags": [],
+    "max_discount_percent": 10,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_salads_01",
+    "name": "Green Eleven",
+    "primary_category": "Salads",
+    "available": true,
+    "status": "quiet",
+    "is_new": false,
+    "campaign_tags": [],
+    "max_discount_percent": 10,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_greek_01",
+    "name": "Athens Wrap",
+    "primary_category": "Greek",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [],
+    "max_discount_percent": 9,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_indian_01",
+    "name": "Curry Cup",
+    "primary_category": "Indian",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [],
+    "max_discount_percent": 10,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_vegan_01",
+    "name": "Plant Match",
+    "primary_category": "Vegan",
+    "available": true,
+    "status": "normal",
+    "is_new": true,
+    "campaign_tags": [],
+    "max_discount_percent": 12,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_icecream_01",
+    "name": "Sweet Goal",
+    "primary_category": "Ice Cream",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [
+      "matchday"
+    ],
+    "max_discount_percent": 8,
+    "service_zones": [
+      "central"
+    ]
+  },
+  {
+    "restaurant_id": "r_boba_01",
+    "name": "Boba Half-Time",
+    "primary_category": "Bubble Tea",
+    "available": true,
+    "status": "normal",
+    "is_new": false,
+    "campaign_tags": [
+      "matchday"
+    ],
+    "max_discount_percent": 8,
+    "service_zones": [
+      "central"
+    ]
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "order_id": "o001",
+    "user_id": "emma",
+    "primary_category": "Korean",
+    "tags": [
+      "asian",
+      "high_protein",
+      "chicken"
+    ],
+    "amount_eur": 14.5,
+    "delivery_minutes": 27,
+    "ordered_at": "2026-06-16"
+  },
+  {
+    "order_id": "o002",
+    "user_id": "emma",
+    "primary_category": "Japanese",
+    "tags": [
+      "asian",
+      "high_protein",
+      "bento"
+    ],
+    "amount_eur": 13.2,
+    "delivery_minutes": 25,
+    "ordered_at": "2026-06-13"
+  },
+  {
+    "order_id": "o003",
+    "user_id": "emma",
+    "primary_category": "Thai",
+    "tags": [
+      "asian",
+      "high_protein",
+      "grilled_chicken"
+    ],
+    "amount_eur": 14.1,
+    "delivery_minutes": 29,
+    "ordered_at": "2026-06-09"
+  },
+  {
+    "order_id": "o004",
+    "user_id": "emma",
+    "primary_category": "Korean",
+    "tags": [
+      "asian",
+      "high_protein",
+      "comfort"
+    ],
+    "amount_eur": 13.8,
+    "delivery_minutes": 26,
+    "ordered_at": "2026-05-31"
+  },
+  {
+    "order_id": "o005",
+    "user_id": "emma",
+    "primary_category": "Japanese",
+    "tags": [
+      "asian",
+      "sushi"
+    ],
+    "amount_eur": 14.4,
+    "delivery_minutes": 28,
+    "ordered_at": "2026-05-24"
+  }
+]

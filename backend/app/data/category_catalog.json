@@ -1,0 +1,224 @@
+[
+  {
+    "label": "Sushi",
+    "asset_id": "category_sushi",
+    "family": "asian",
+    "placeholder_emoji": "🍣"
+  },
+  {
+    "label": "Asian",
+    "asset_id": "category_asian",
+    "family": "asian",
+    "placeholder_emoji": "🍜"
+  },
+  {
+    "label": "Chicken",
+    "asset_id": "category_chicken",
+    "family": "protein",
+    "placeholder_emoji": "🍗"
+  },
+  {
+    "label": "Healthy",
+    "asset_id": "category_healthy",
+    "family": "health",
+    "placeholder_emoji": "🥗"
+  },
+  {
+    "label": "Mexican",
+    "asset_id": "category_mexican",
+    "family": "latin",
+    "placeholder_emoji": "🌮"
+  },
+  {
+    "label": "Pizza",
+    "asset_id": "category_pizza",
+    "family": "western",
+    "placeholder_emoji": "🍕"
+  },
+  {
+    "label": "Burgers",
+    "asset_id": "category_burgers",
+    "family": "western",
+    "placeholder_emoji": "🍔"
+  },
+  {
+    "label": "Fast Food",
+    "asset_id": "category_fast_food",
+    "family": "western",
+    "placeholder_emoji": "🍟"
+  },
+  {
+    "label": "Chinese",
+    "asset_id": "category_chinese",
+    "family": "asian",
+    "placeholder_emoji": "🥡"
+  },
+  {
+    "label": "Ice Cream",
+    "asset_id": "category_ice_cream",
+    "family": "dessert",
+    "placeholder_emoji": "🍦"
+  },
+  {
+    "label": "Wings",
+    "asset_id": "category_wings",
+    "family": "protein",
+    "placeholder_emoji": "🍗"
+  },
+  {
+    "label": "Vietnamese",
+    "asset_id": "category_vietnamese",
+    "family": "asian",
+    "placeholder_emoji": "🍜"
+  },
+  {
+    "label": "Thai",
+    "asset_id": "category_thai",
+    "family": "asian",
+    "placeholder_emoji": "🍲"
+  },
+  {
+    "label": "Greek",
+    "asset_id": "category_greek",
+    "family": "mediterranean",
+    "placeholder_emoji": "🥙"
+  },
+  {
+    "label": "Desserts",
+    "asset_id": "category_desserts",
+    "family": "dessert",
+    "placeholder_emoji": "🍰"
+  },
+  {
+    "label": "Poke",
+    "asset_id": "category_poke",
+    "family": "asian",
+    "placeholder_emoji": "🍚"
+  },
+  {
+    "label": "Coffee",
+    "asset_id": "category_coffee",
+    "family": "beverage",
+    "placeholder_emoji": "☕"
+  },
+  {
+    "label": "Indian",
+    "asset_id": "category_indian",
+    "family": "asian",
+    "placeholder_emoji": "🍛"
+  },
+  {
+    "label": "Korean",
+    "asset_id": "category_korean",
+    "family": "asian",
+    "placeholder_emoji": "🍲"
+  },
+  {
+    "label": "Italian",
+    "asset_id": "category_italian",
+    "family": "western",
+    "placeholder_emoji": "🍝"
+  },
+  {
+    "label": "Japanese",
+    "asset_id": "category_japanese",
+    "family": "asian",
+    "placeholder_emoji": "🍙"
+  },
+  {
+    "label": "Bakery",
+    "asset_id": "category_bakery",
+    "family": "bakery",
+    "placeholder_emoji": "🥐"
+  },
+  {
+    "label": "Bubble Tea",
+    "asset_id": "category_bubble_tea",
+    "family": "beverage",
+    "placeholder_emoji": "🧋"
+  },
+  {
+    "label": "Taiwanese",
+    "asset_id": "category_taiwanese",
+    "family": "asian",
+    "placeholder_emoji": "🍱"
+  },
+  {
+    "label": "Halal",
+    "asset_id": "category_halal",
+    "family": "dietary",
+    "placeholder_emoji": "🍢"
+  },
+  {
+    "label": "Soup",
+    "asset_id": "category_soup",
+    "family": "comfort",
+    "placeholder_emoji": "🥣"
+  },
+  {
+    "label": "Vegan",
+    "asset_id": "category_vegan",
+    "family": "dietary",
+    "placeholder_emoji": "🌱"
+  },
+  {
+    "label": "American",
+    "asset_id": "category_american",
+    "family": "western",
+    "placeholder_emoji": "🌭"
+  },
+  {
+    "label": "BBQ",
+    "asset_id": "category_bbq",
+    "family": "protein",
+    "placeholder_emoji": "🍖"
+  },
+  {
+    "label": "Breakfast",
+    "asset_id": "category_breakfast",
+    "family": "breakfast",
+    "placeholder_emoji": "🥞"
+  },
+  {
+    "label": "Salads",
+    "asset_id": "category_salads",
+    "family": "health",
+    "placeholder_emoji": "🥗"
+  },
+  {
+    "label": "Seafood",
+    "asset_id": "category_seafood",
+    "family": "protein",
+    "placeholder_emoji": "🦐"
+  },
+  {
+    "label": "Sandwiches",
+    "asset_id": "category_sandwiches",
+    "family": "western",
+    "placeholder_emoji": "🥪"
+  },
+  {
+    "label": "Street Food",
+    "asset_id": "category_street_food",
+    "family": "street",
+    "placeholder_emoji": "🍢"
+  },
+  {
+    "label": "Comfort Food",
+    "asset_id": "category_comfort_food",
+    "family": "comfort",
+    "placeholder_emoji": "🧀"
+  },
+  {
+    "label": "Caribbean",
+    "asset_id": "category_caribbean",
+    "family": "world",
+    "placeholder_emoji": "🍛"
+  },
+  {
+    "label": "Hawaiian",
+    "asset_id": "category_hawaiian",
+    "family": "world",
+    "placeholder_emoji": "🍱"
+  }
+]

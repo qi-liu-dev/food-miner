@@ -1,0 +1,454 @@
+[
+  {
+    "meal_id": "m_korean_01",
+    "restaurant_id": "r_korean_01",
+    "name": "Korean Matchday Chicken Bowl",
+    "primary_category": "Korean",
+    "categories": [
+      "Korean",
+      "Chicken",
+      "Asian"
+    ],
+    "tags": [
+      "asian",
+      "high_protein",
+      "chicken",
+      "matchday"
+    ],
+    "price_eur": 13.9,
+    "delivery_minutes": 24,
+    "dietary": [
+      "halal"
+    ],
+    "allergens": [
+      "soy",
+      "sesame"
+    ],
+    "image_asset_id": "food_korean_chicken_bowl",
+    "available": true
+  },
+  {
+    "meal_id": "m_japanese_01",
+    "restaurant_id": "r_japanese_01",
+    "name": "Japanese Protein Bento",
+    "primary_category": "Japanese",
+    "categories": [
+      "Japanese",
+      "Healthy",
+      "Asian"
+    ],
+    "tags": [
+      "asian",
+      "high_protein",
+      "bento"
+    ],
+    "price_eur": 13.5,
+    "delivery_minutes": 25,
+    "dietary": [],
+    "allergens": [
+      "soy"
+    ],
+    "image_asset_id": "food_japanese_protein_bento",
+    "available": true
+  },
+  {
+    "meal_id": "m_thai_01",
+    "restaurant_id": "r_thai_01",
+    "name": "Thai Grilled Chicken Rice",
+    "primary_category": "Thai",
+    "categories": [
+      "Thai",
+      "Chicken",
+      "Asian"
+    ],
+    "tags": [
+      "asian",
+      "high_protein",
+      "grilled_chicken"
+    ],
+    "price_eur": 14.0,
+    "delivery_minutes": 28,
+    "dietary": [
+      "halal"
+    ],
+    "allergens": [
+      "peanut"
+    ],
+    "image_asset_id": "food_thai_grilled_chicken",
+    "available": true
+  },
+  {
+    "meal_id": "m_italian_01",
+    "restaurant_id": "r_italian_01",
+    "name": "New Italian Matchday Pizza",
+    "primary_category": "Italian",
+    "categories": [
+      "Italian",
+      "Pizza"
+    ],
+    "tags": [
+      "italian",
+      "pizza",
+      "matchday",
+      "new_restaurant"
+    ],
+    "price_eur": 14.5,
+    "delivery_minutes": 28,
+    "dietary": [
+      "vegetarian"
+    ],
+    "allergens": [
+      "gluten",
+      "dairy"
+    ],
+    "image_asset_id": "food_italian_matchday_pizza",
+    "available": true
+  },
+  {
+    "meal_id": "m_wings_01",
+    "restaurant_id": "r_wings_01",
+    "name": "Matchday Crispy Chicken Wings",
+    "primary_category": "Wings",
+    "categories": [
+      "Wings",
+      "Chicken",
+      "Fast Food"
+    ],
+    "tags": [
+      "high_protein",
+      "chicken",
+      "matchday",
+      "fast_food"
+    ],
+    "price_eur": 13.8,
+    "delivery_minutes": 26,
+    "dietary": [],
+    "allergens": [
+      "gluten"
+    ],
+    "image_asset_id": "food_matchday_wings",
+    "available": true
+  },
+  {
+    "meal_id": "m_bbq_01",
+    "restaurant_id": "r_bbq_01",
+    "name": "Quiet-Hour BBQ Protein Box",
+    "primary_category": "BBQ",
+    "categories": [
+      "BBQ",
+      "Comfort Food"
+    ],
+    "tags": [
+      "high_protein",
+      "bbq",
+      "matchday",
+      "comfort"
+    ],
+    "price_eur": 14.2,
+    "delivery_minutes": 29,
+    "dietary": [],
+    "allergens": [],
+    "image_asset_id": "food_bbq_protein_box",
+    "available": true
+  },
+  {
+    "meal_id": "m_burger_01",
+    "restaurant_id": "r_burgers_01",
+    "name": "Kickoff Chicken Burger Combo",
+    "primary_category": "Burgers",
+    "categories": [
+      "Burgers",
+      "Fast Food",
+      "Chicken"
+    ],
+    "tags": [
+      "chicken",
+      "matchday",
+      "fast_food"
+    ],
+    "price_eur": 13.6,
+    "delivery_minutes": 22,
+    "dietary": [],
+    "allergens": [
+      "gluten",
+      "dairy"
+    ],
+    "image_asset_id": "food_kickoff_burger",
+    "available": true
+  },
+  {
+    "meal_id": "m_mexican_01",
+    "restaurant_id": "r_mexican_01",
+    "name": "Mexican Grilled Chicken Tacos",
+    "primary_category": "Mexican",
+    "categories": [
+      "Mexican",
+      "Street Food",
+      "Chicken"
+    ],
+    "tags": [
+      "high_protein",
+      "chicken",
+      "matchday",
+      "street_food"
+    ],
+    "price_eur": 13.7,
+    "delivery_minutes": 27,
+    "dietary": [
+      "halal"
+    ],
+    "allergens": [
+      "gluten"
+    ],
+    "image_asset_id": "food_mexican_tacos",
+    "available": true
+  },
+  {
+    "meal_id": "m_vietnamese_01",
+    "restaurant_id": "r_vietnamese_01",
+    "name": "Vietnamese Beef Pho",
+    "primary_category": "Vietnamese",
+    "categories": [
+      "Vietnamese",
+      "Soup",
+      "Asian"
+    ],
+    "tags": [
+      "asian",
+      "soup",
+      "comfort"
+    ],
+    "price_eur": 13.4,
+    "delivery_minutes": 30,
+    "dietary": [],
+    "allergens": [
+      "soy"
+    ],
+    "image_asset_id": "food_vietnamese_pho",
+    "available": true
+  },
+  {
+    "meal_id": "m_poke_01",
+    "restaurant_id": "r_poke_01",
+    "name": "Salmon Protein Poke",
+    "primary_category": "Poke",
+    "categories": [
+      "Poke",
+      "Healthy",
+      "Seafood"
+    ],
+    "tags": [
+      "high_protein",
+      "healthy",
+      "seafood"
+    ],
+    "price_eur": 14.3,
+    "delivery_minutes": 23,
+    "dietary": [],
+    "allergens": [
+      "fish",
+      "soy"
+    ],
+    "image_asset_id": "food_salmon_poke",
+    "available": true
+  },
+  {
+    "meal_id": "m_sushi_01",
+    "restaurant_id": "r_sushi_01",
+    "name": "Salmon Sushi Set",
+    "primary_category": "Sushi",
+    "categories": [
+      "Sushi",
+      "Japanese",
+      "Seafood"
+    ],
+    "tags": [
+      "asian",
+      "sushi",
+      "seafood"
+    ],
+    "price_eur": 14.1,
+    "delivery_minutes": 26,
+    "dietary": [],
+    "allergens": [
+      "fish",
+      "soy"
+    ],
+    "image_asset_id": "food_salmon_sushi",
+    "available": true
+  },
+  {
+    "meal_id": "m_chinese_01",
+    "restaurant_id": "r_chinese_01",
+    "name": "Chinese Chicken Noodle Box",
+    "primary_category": "Chinese",
+    "categories": [
+      "Chinese",
+      "Comfort Food",
+      "Chicken"
+    ],
+    "tags": [
+      "asian",
+      "chicken",
+      "comfort"
+    ],
+    "price_eur": 13.3,
+    "delivery_minutes": 25,
+    "dietary": [],
+    "allergens": [
+      "gluten",
+      "soy"
+    ],
+    "image_asset_id": "food_chinese_noodles",
+    "available": true
+  },
+  {
+    "meal_id": "m_salad_01",
+    "restaurant_id": "r_salads_01",
+    "name": "High-Protein Chicken Salad",
+    "primary_category": "Salads",
+    "categories": [
+      "Salads",
+      "Healthy",
+      "Chicken"
+    ],
+    "tags": [
+      "high_protein",
+      "healthy",
+      "chicken"
+    ],
+    "price_eur": 13.8,
+    "delivery_minutes": 21,
+    "dietary": [
+      "halal"
+    ],
+    "allergens": [],
+    "image_asset_id": "food_protein_salad",
+    "available": true
+  },
+  {
+    "meal_id": "m_greek_01",
+    "restaurant_id": "r_greek_01",
+    "name": "Greek Chicken Gyro",
+    "primary_category": "Greek",
+    "categories": [
+      "Greek",
+      "Sandwiches",
+      "Chicken"
+    ],
+    "tags": [
+      "high_protein",
+      "chicken"
+    ],
+    "price_eur": 13.9,
+    "delivery_minutes": 28,
+    "dietary": [
+      "halal"
+    ],
+    "allergens": [
+      "gluten",
+      "dairy"
+    ],
+    "image_asset_id": "food_greek_gyro",
+    "available": true
+  },
+  {
+    "meal_id": "m_indian_01",
+    "restaurant_id": "r_indian_01",
+    "name": "Indian Chicken Curry",
+    "primary_category": "Indian",
+    "categories": [
+      "Indian",
+      "Comfort Food",
+      "Chicken"
+    ],
+    "tags": [
+      "high_protein",
+      "chicken",
+      "comfort"
+    ],
+    "price_eur": 13.6,
+    "delivery_minutes": 29,
+    "dietary": [
+      "halal"
+    ],
+    "allergens": [
+      "dairy"
+    ],
+    "image_asset_id": "food_indian_curry",
+    "available": true
+  },
+  {
+    "meal_id": "m_vegan_01",
+    "restaurant_id": "r_vegan_01",
+    "name": "Vegan Power Bowl",
+    "primary_category": "Vegan",
+    "categories": [
+      "Vegan",
+      "Healthy"
+    ],
+    "tags": [
+      "vegan",
+      "healthy",
+      "high_protein"
+    ],
+    "price_eur": 13.5,
+    "delivery_minutes": 24,
+    "dietary": [
+      "vegan"
+    ],
+    "allergens": [
+      "sesame"
+    ],
+    "image_asset_id": "food_vegan_power_bowl",
+    "available": true
+  },
+  {
+    "meal_id": "m_icecream_01",
+    "restaurant_id": "r_icecream_01",
+    "name": "Matchday Berry Ice Cream",
+    "primary_category": "Ice Cream",
+    "categories": [
+      "Ice Cream",
+      "Desserts"
+    ],
+    "tags": [
+      "dessert",
+      "matchday"
+    ],
+    "price_eur": 6.9,
+    "delivery_minutes": 18,
+    "dietary": [
+      "vegetarian"
+    ],
+    "allergens": [
+      "dairy"
+    ],
+    "image_asset_id": "food_berry_icecream",
+    "available": true
+  },
+  {
+    "meal_id": "m_boba_01",
+    "restaurant_id": "r_boba_01",
+    "name": "Matcha Bubble Tea",
+    "primary_category": "Bubble Tea",
+    "categories": [
+      "Bubble Tea",
+      "Taiwanese"
+    ],
+    "tags": [
+      "beverage",
+      "matchday"
+    ],
+    "price_eur": 5.9,
+    "delivery_minutes": 17,
+    "dietary": [
+      "vegetarian"
+    ],
+    "allergens": [
+      "dairy"
+    ],
+    "image_asset_id": "food_matcha_boba",
+    "available": true
+  }
+]

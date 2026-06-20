@@ -1,0 +1,17 @@
+{
+  "campaign_id": "world-cup-matchday",
+  "boosted_categories": [
+    "Pizza",
+    "Wings",
+    "BBQ",
+    "Fast Food",
+    "Burgers"
+  ],
+  "boost_new_categories": [
+    "Italian"
+  ],
+  "boost_quiet_hour_restaurants": true,
+  "active_tags": [
+    "matchday"
+  ]
+}
