@@ -169,59 +169,466 @@ button:disabled { cursor: not-allowed; opacity: 0.62; }
   background: rgba(255,255,255,.84); font-size: .75rem; font-weight: 700;
 }
 .compact-summary { justify-content: center; flex-wrap: wrap; overflow: visible; margin-top: 18px; }
-.game-section { padding: 10px 14px 28px; }
-.game-copy { padding: 8px 6px 12px; }
-.game-copy h1 { margin: 0 0 6px; font-size: 1.75rem; }
-.game-copy p:not(.eyebrow) { margin: 0; color: var(--text-secondary); }
+.game-section {
+  padding: 10px 14px 28px;
+}
+
+.game-copy {
+  padding: 8px 6px 12px;
+}
+
+.game-copy h1 {
+  margin: 0 0 6px;
+  font-size: 1.75rem;
+}
+
+.game-copy p:not(.eyebrow) {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
 .game-canvas {
-  position: relative; height: 510px; overflow: hidden; border: 1px solid #ccebd9; border-radius: 26px;
-  background: radial-gradient(circle at 50% 8%,rgba(255,255,255,.95),rgba(255,255,255,.15) 30%),
-    linear-gradient(180deg,#c9f4dd 0%,#eafff2 34%,#f4d7a6 35%,#b88045 100%);
-  box-shadow: inset 0 0 35px rgba(27,118,69,.12),0 12px 28px rgba(8,80,48,.12);
+  position: relative;
+  isolation: isolate;
+  height: 510px;
+  overflow: hidden;
+  border: 1px solid #ccebd9;
+  border-radius: 26px;
+  background:
+    radial-gradient(
+      circle at 50% 8%,
+      rgba(255,255,255,.95),
+      rgba(255,255,255,.15) 30%
+    ),
+    linear-gradient(
+      180deg,
+      #c9f4dd 0%,
+      #eafff2 34%,
+      #f4d7a6 35%,
+      #b88045 100%
+    );
+  box-shadow:
+    inset 0 0 35px rgba(27,118,69,.12),
+    0 12px 28px rgba(8,80,48,.12);
 }
-.mine-sky { position: absolute; inset: 16px 18px auto; display: flex; justify-content: space-between; color: rgba(0,0,0,.32); font-size: 1.35rem; }
+
+.game-canvas::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at center,
+      transparent 48%,
+      rgba(19,71,45,.08) 100%
+    );
+  content: "";
+}
+
+.mine-sky {
+  position: absolute;
+  z-index: 1;
+  inset: 16px 18px auto;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(0,0,0,.32);
+  font-size: 1.35rem;
+}
+
+.mine-sky span {
+  animation: sky-bob 2.6s ease-in-out infinite alternate;
+}
+
+.mine-sky span:nth-child(2) {
+  animation-delay: -900ms;
+}
+
+.mine-sky span:nth-child(3) {
+  animation-delay: -1600ms;
+}
+
 .mine-floor {
-  position: absolute; right: -20%; bottom: -90px; left: -20%; height: 210px; border-radius: 50%;
-  background: repeating-linear-gradient(15deg,#9d6634 0 20px,#ad7540 20px 40px); opacity: .34;
+  position: absolute;
+  z-index: 1;
+  right: -20%;
+  bottom: -90px;
+  left: -20%;
+  height: 210px;
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(
+      15deg,
+      #9d6634 0 20px,
+      #ad7540 20px 40px
+    );
+  opacity: .34;
 }
+
 .hook-arm {
-  position: absolute; z-index: 8; top: 20px; left: 50%; width: 2px; transform: translateX(-50%); transform-origin: top center;
-  transition: transform 240ms ease-out;
+  position: absolute;
+  z-index: 12;
+  top: 20px;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+  transform-origin: top center;
+  transition: transform 130ms cubic-bezier(.2,.8,.2,1);
+  will-change: transform;
 }
+
+.hook-arm.phase-ready {
+  transition: none;
+}
+
 .hook-rope {
-  position: relative; width: 3px; min-height: 74px; margin-left: -1px;
-  background: repeating-linear-gradient(to bottom,#3c2c1c 0 7px,#7f5b33 7px 12px); transition: height 540ms ease-out;
+  position: relative;
+  width: 3px;
+  min-height: 74px;
+  margin-left: -1px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      #3c2c1c 0 7px,
+      #7f5b33 7px 12px
+    );
+  transition:
+    height 470ms cubic-bezier(.18,.76,.2,1);
+  will-change: height;
 }
-.phase-retracting .hook-rope { transition-duration: 700ms; transition-timing-function: ease-in; }
+
+.phase-retracting .hook-rope {
+  transition-duration: 1080ms;
+  transition-timing-function: cubic-bezier(.22,.68,.2,1);
+}
+
 .hook-head {
-  position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%) rotate(180deg); font-size: 2rem;
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+  font-size: 2rem;
   filter: drop-shadow(0 4px 4px rgba(0,0,0,.2));
+  transform-origin: 50% 30%;
 }
-.captured-gem { position: absolute; bottom: -53px; left: 50%; transform: translateX(-50%) rotate(180deg); font-size: 2.3rem; }
+
+.phase-locking .hook-head {
+  animation: hook-lock-pulse 130ms ease-out;
+}
+
+.phase-attached .hook-head {
+  animation: hook-catch-pop 170ms ease-out;
+}
+
+.phase-verifying .hook-head,
+.phase-done .hook-head {
+  animation: hook-confirm-pulse 500ms ease-in-out infinite alternate;
+}
+
+.captured-gem-anchor {
+  position: absolute;
+  z-index: 3;
+  bottom: -82px;
+  left: 50%;
+  transform-origin: center;
+}
+
+.captured-gem-orb {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  border: 4px solid rgba(255,255,255,.95);
+  border-radius: 50%;
+  background: linear-gradient(145deg,#a7ffcc,#06c167);
+  box-shadow:
+    0 10px 18px rgba(24,76,43,.30),
+    0 0 0 7px rgba(255,255,255,.22);
+  font-size: 2rem;
+  transform-origin: center top;
+}
+
+.phase-attached .captured-gem-orb {
+  animation: captured-gem-pop 170ms ease-out;
+}
+
+.phase-retracting .captured-gem-orb {
+  animation: captured-gem-sway 330ms ease-in-out infinite alternate;
+}
+
+.captured-gem-image {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
 .food-gem {
-  position: absolute; z-index: 4; display: grid; width: 86px; justify-items: center; gap: 5px;
-  transition: opacity 160ms ease, transform 160ms ease;
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  width: 86px;
+  justify-items: center;
+  gap: 5px;
+  opacity: 1;
+  transition:
+    opacity 180ms ease,
+    filter 180ms ease;
+  will-change: opacity, filter;
 }
-.gem-hidden { opacity: 0; }
+
+.gem-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gem-dimmed {
+  opacity: .68;
+  filter: saturate(.74) brightness(.96);
+}
+
 .gem-orb {
-  display: grid; width: 64px; height: 56px; place-items: center; border: 4px solid rgba(255,255,255,.82);
+  position: relative;
+  display: grid;
+  width: 64px;
+  height: 56px;
+  place-items: center;
+  border: 4px solid rgba(255,255,255,.82);
   border-radius: 42% 58% 45% 55% / 52% 42% 58% 48%;
-  box-shadow: 0 8px 14px rgba(73,49,18,.24),inset 0 0 0 2px rgba(0,0,0,.05);
+  box-shadow:
+    0 8px 14px rgba(73,49,18,.24),
+    inset 0 0 0 2px rgba(0,0,0,.05);
+  animation: gem-float 2.2s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
 }
-.gem-history .gem-orb { background: linear-gradient(145deg,#a7ffcc,#06c167); }
-.gem-campaign .gem-orb { background: linear-gradient(145deg,#ffe57c,#ff8f00); }
-.gem-restaurant_boost .gem-orb { background: linear-gradient(145deg,#d8c4ff,#8b5cf6); }
-.gem-exploration .gem-orb { background: linear-gradient(145deg,#a9e7ff,#2196f3); }
-.gem-emoji { font-size: 2rem; }
+
+.gem-targeted {
+  z-index: 7;
+  opacity: 1;
+  filter: none;
+}
+
+.gem-targeted .gem-orb {
+  animation: gem-target-pulse 330ms ease-in-out infinite alternate;
+}
+
+.gem-targeted .gem-orb::before,
+.gem-targeted .gem-orb::after {
+  position: absolute;
+  inset: -9px;
+  border: 3px solid rgba(255,255,255,.92);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+  animation: target-ring 700ms ease-out infinite;
+}
+
+.gem-targeted .gem-orb::after {
+  animation-delay: 350ms;
+}
+
+.gem-history .gem-orb {
+  background: linear-gradient(145deg,#a7ffcc,#06c167);
+}
+
+.gem-campaign .gem-orb {
+  background: linear-gradient(145deg,#ffe57c,#ff8f00);
+}
+
+.gem-restaurant_boost .gem-orb {
+  background: linear-gradient(145deg,#d8c4ff,#8b5cf6);
+}
+
+.gem-exploration .gem-orb {
+  background: linear-gradient(145deg,#a9e7ff,#2196f3);
+}
+
+.gem-emoji {
+  font-size: 2rem;
+}
+
 .gem-label {
-  max-width: 86px; padding: 4px 7px; border-radius: 9px; color: #1b1b1b; background: rgba(255,255,255,.9);
-  box-shadow: 0 3px 8px rgba(0,0,0,.12); font-size: .7rem; font-weight: 900; line-height: 1.1; text-align: center;
+  max-width: 86px;
+  padding: 4px 7px;
+  border-radius: 9px;
+  color: #1b1b1b;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 3px 8px rgba(0,0,0,.12);
+  font-size: .7rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
 }
-.catch-button { margin-top: 16px; background: #111; }
-.single-catch-note { margin: 9px 0 0; color: var(--text-secondary); font-size: .8rem; text-align: center; }
-.inline-error, .page-error { margin: 12px 0; padding: 12px; border-radius: 12px; color: #7a1f1f; background: #ffebee; }
-.inline-error { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.inline-error button { border: 0; color: #7a1f1f; background: transparent; font-weight: 900; }
+
+.catch-status {
+  min-height: 20px;
+  margin: 12px 6px 0;
+  color: #285943;
+  font-size: .78rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.catch-button {
+  margin-top: 10px;
+  background: #111;
+}
+
+.catch-button[data-phase="attached"],
+.catch-button[data-phase="retracting"] {
+  color: #062b1b;
+  background: #bff3d7;
+}
+
+.catch-button[data-phase="verifying"],
+.catch-button[data-phase="done"] {
+  color: #06452a;
+  background: #d9f9e8;
+}
+
+.single-catch-note {
+  margin: 9px 0 0;
+  color: var(--text-secondary);
+  font-size: .8rem;
+  text-align: center;
+}
+
+.inline-error,
+.page-error {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 12px;
+  color: #7a1f1f;
+  background: #ffebee;
+}
+
+.inline-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.inline-error button {
+  border: 0;
+  color: #7a1f1f;
+  background: transparent;
+  font-weight: 900;
+}
+
+@keyframes sky-bob {
+  from {
+    transform: translateY(0) rotate(-2deg);
+  }
+
+  to {
+    transform: translateY(5px) rotate(2deg);
+  }
+}
+
+@keyframes gem-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(1.5deg);
+  }
+}
+
+@keyframes gem-target-pulse {
+  from {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1);
+  }
+
+  to {
+    transform: translateY(-5px) scale(1.10);
+    filter: brightness(1.12);
+  }
+}
+
+@keyframes target-ring {
+  0% {
+    opacity: .9;
+    transform: scale(.82);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.28);
+  }
+}
+
+@keyframes hook-lock-pulse {
+  0% {
+    transform: translateX(-50%) rotate(180deg) scale(1);
+  }
+
+  60% {
+    transform: translateX(-50%) rotate(180deg) scale(1.18);
+  }
+
+  100% {
+    transform: translateX(-50%) rotate(180deg) scale(1);
+  }
+}
+
+@keyframes hook-catch-pop {
+  0% {
+    transform: translateX(-50%) rotate(180deg) scale(1);
+  }
+
+  55% {
+    transform: translateX(-50%) rotate(180deg) scale(1.28);
+  }
+
+  100% {
+    transform: translateX(-50%) rotate(180deg) scale(1);
+  }
+}
+
+@keyframes hook-confirm-pulse {
+  from {
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,.2));
+  }
+
+  to {
+    filter:
+      drop-shadow(0 4px 4px rgba(0,0,0,.2))
+      drop-shadow(0 0 8px rgba(6,193,103,.68));
+  }
+}
+
+@keyframes captured-gem-pop {
+  0% {
+    opacity: 0;
+    transform: scale(.45);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes captured-gem-sway {
+  from {
+    transform: rotate(-5deg) translateX(-3px);
+  }
+
+  to {
+    transform: rotate(5deg) translateX(3px);
+  }
+}
+
 .sheet-backdrop {
   position: fixed; z-index: 50; inset: 0; display: grid; align-items: end; justify-items: center; padding: 0; background: rgba(0,0,0,.48);
 }
@@ -297,7 +704,17 @@ button:disabled { cursor: not-allowed; opacity: 0.62; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    scroll-behavior: auto !important; animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  .mine-sky span,
+  .gem-orb,
+  .captured-gem-orb,
+  .hook-head {
+    animation: none !important;
   }
 }
 

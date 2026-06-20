@@ -59,8 +59,17 @@ export default function MinerPage() {
     gemId: string,
     requestId: string,
   ): Promise<CatchResponse> {
-    if (!session) throw new Error("Game session is unavailable");
-    const response = await catchGem(session.game_id, gemId, requestId);
+    if (!session) {
+      throw new Error("Game session is unavailable");
+    }
+
+    // Do not update session.status here. GameCanvas must stay mounted while
+    // the hook drops, attaches to the Gem and retracts.
+    return catchGem(session.game_id, gemId, requestId);
+  }
+
+  function handleReveal(response: CatchResponse) {
+    // Only switch the page to CAUGHT after the complete animation has ended.
     setSession((current) =>
       current
         ? {
@@ -70,10 +79,6 @@ export default function MinerPage() {
           }
         : current,
     );
-    return response;
-  }
-
-  function handleReveal(response: CatchResponse) {
     setRevealedDeal(response.deal);
   }
 
