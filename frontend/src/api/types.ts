@@ -43,7 +43,7 @@ export type GemType =
   | "restaurant_boost"
   | "exploration";
 
-export type SessionStatus = "READY" | "CAUGHT" | "CLAIMED";
+export type SessionStatus = "READY" | "CAUGHT" | "CLAIMED" | "ORDERED";
 
 export interface FoodGem {
   gem_id: string;
@@ -113,8 +113,10 @@ export interface RestaurantPageResponse {
   restaurant_id: string;
   restaurant_name: string;
   primary_category: CategoryLabel;
+  game_id: string | null;
   discount_percent: number | null;
   discount_applied: boolean;
+  cart_ready: boolean;
   recommended_meal_id: string | null;
   menu: Array<{
     meal_id: string;
@@ -123,5 +125,58 @@ export interface RestaurantPageResponse {
     price_eur: number;
     discounted_price_eur: number | null;
     is_recommended: boolean;
+    quantity_in_cart: number;
   }>;
+}
+
+export interface CartResponse {
+  game_id: string;
+  status: SessionStatus;
+  restaurant: {
+    restaurant_id: string;
+    name: string;
+    primary_category: CategoryLabel;
+  };
+  item: {
+    meal_id: string;
+    name: string;
+    image_asset_id: string;
+    quantity: number;
+    price_before: number;
+    discount_percent: number;
+    discount_amount: number;
+    price_after: number;
+  };
+  fees: {
+    delivery_fee: number;
+    service_fee: number;
+  };
+  total: number;
+}
+
+export interface PlaceOrderResponse {
+  order_id: string;
+  game_id: string;
+  status: "ORDERED";
+  restaurant_name: string;
+  meal_name: string;
+  final_amount: number;
+  estimated_delivery: string;
+  ordered_at: string;
+}
+
+export interface OrderHistoryRecord {
+  order_id: string;
+  user_id: string;
+  primary_category: CategoryLabel;
+  tags: string[];
+  amount_eur: number;
+  delivery_minutes: number;
+  ordered_at: string;
+}
+
+export interface OrderHistoryResponse {
+  user_id: string;
+  count: number;
+  orders: OrderHistoryRecord[];
 }

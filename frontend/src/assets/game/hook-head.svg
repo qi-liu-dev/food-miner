@@ -1,0 +1,8 @@
+<svg width="64" height="88" viewBox="0 0 64 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>Fishing hook</title>
+  <g stroke="#1A1A1A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="10" r="7"/>
+    <path d="M32 17V49C32 66.5 22.4 77 12.5 73.5C4.7 70.7 4.6 59.2 10.7 54"/>
+    <path d="M10.7 54L20 56.5"/>
+  </g>
+</svg>

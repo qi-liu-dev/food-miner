@@ -1,7 +1,10 @@
 import type {
+  CartResponse,
   CatchResponse,
   ClaimResponse,
   GameSessionResponse,
+  OrderHistoryResponse,
+  PlaceOrderResponse,
   RestaurantPageResponse,
 } from "./types";
 
@@ -76,6 +79,28 @@ export function getRestaurant(
   const query = dealToken ? `?deal=${encodeURIComponent(dealToken)}` : "";
   return request<RestaurantPageResponse>(
     `/api/restaurants/${restaurantId}${query}`,
+  );
+}
+
+export function getCart(gameId: string): Promise<CartResponse> {
+  return request<CartResponse>(`/api/game-sessions/${gameId}/cart`);
+}
+
+export function placeOrder(gameId: string): Promise<PlaceOrderResponse> {
+  return request<PlaceOrderResponse>(
+    `/api/game-sessions/${gameId}/place-order`,
+    {
+      method: "POST",
+      body: JSON.stringify({}),
+    },
+  );
+}
+
+export function getOrderHistory(
+  userId = "emma",
+): Promise<OrderHistoryResponse> {
+  return request<OrderHistoryResponse>(
+    `/api/users/${encodeURIComponent(userId)}/order-history`,
   );
 }
 

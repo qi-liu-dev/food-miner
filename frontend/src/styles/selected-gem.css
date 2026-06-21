@@ -1,0 +1,78 @@
+/* Selected cuisine state inspired by CATCHING(1).svg */
+.gem-card-hitbox {
+  isolation: isolate;
+}
+
+.gem-targeted {
+  z-index: 12;
+  opacity: 1;
+  filter: none;
+}
+
+.gem-targeted .gem-card-hitbox {
+  animation: selected-gem-lock 220ms cubic-bezier(.2, .9, .2, 1) both;
+  filter: drop-shadow(6px 7px 0 rgba(0, 0, 0, .92));
+}
+
+.gem-targeted .gem-card-hitbox::before {
+  position: absolute;
+  z-index: 0;
+  inset: -10px;
+  border: 3px dashed #ff4b1a;
+  content: "";
+  pointer-events: none;
+  transform: rotate(-5deg);
+  animation: selected-gem-dash 650ms ease-in-out infinite alternate;
+}
+
+.gem-targeted .gem-card-hitbox::after {
+  display: none;
+}
+
+.gem-targeted .gem-card-label {
+  background: #ff4b1a !important;
+}
+
+.gem-dimmed {
+  opacity: .34;
+  filter: grayscale(.22) saturate(.58);
+}
+
+.captured-gem-card {
+  filter: drop-shadow(5px 6px 0 rgba(0, 0, 0, .92));
+}
+
+.captured-gem-card::before {
+  position: absolute;
+  z-index: 0;
+  inset: -7px;
+  border: 2px dashed #ff4b1a;
+  content: "";
+  pointer-events: none;
+}
+
+.captured-gem-label {
+  background: #ff4b1a !important;
+}
+
+@keyframes selected-gem-lock {
+  from {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+
+  to {
+    transform: translateY(-7px) rotate(-5deg) scale(1.13);
+  }
+}
+
+@keyframes selected-gem-dash {
+  from {
+    opacity: .62;
+    transform: rotate(-5deg) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(-5deg) scale(1.03);
+  }
+}

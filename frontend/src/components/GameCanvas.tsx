@@ -1,9 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import type { CatchResponse, FoodGem } from "../api/types";
+import catchFieldUrl from "../assets/game/catch-field.svg";
+import catIdleUrl from "../assets/game/cat-idle.svg";
+import catExcitedUrl from "../assets/game/cat-excited.svg";
+import gemCardDefaultUrl from "../assets/gems/gem-card-default.svg";
+import gemCardSelectedUrl from "../assets/gems/gem-card-selected.svg";
 import { resolveCategoryAsset } from "../assets/assetRegistry";
 import { CATEGORY_EMOJI } from "../data/categoryVisuals";
 import FoodGemView from "./FoodGem";
+import hookHeadUrl from "../assets/game/hook-head.svg";
 
 interface GameCanvasProps {
   gems: FoodGem[];
@@ -14,17 +20,25 @@ interface GameCanvasProps {
   onReveal: (response: CatchResponse) => void;
 }
 
+// Designer layout: three cards on the first row, one in the middle,
+// and two cards on the bottom row. Positions are percentages of the
+// complete game canvas and therefore remain responsive.
 const GEM_POSITIONS = [
-  { x: 12, y: 56, scale: 1.05 },
-  { x: 29, y: 78, scale: 0.92 },
-  { x: 43, y: 53, scale: 0.98 },
-  { x: 59, y: 76, scale: 1.03 },
-  { x: 75, y: 54, scale: 0.94 },
-  { x: 90, y: 73, scale: 1.02 },
+  { x: 24, y: 43, scale: 0.88 },
+  { x: 76, y: 43, scale: 0.88 },
+
+  { x: 24, y: 64, scale: 0.88 },
+  { x: 76, y: 64, scale: 0.88 },
+
+  { x: 24, y: 84, scale: 0.88 },
+  { x: 76, y: 84, scale: 0.88 },
 ];
 
-const INITIAL_ROPE_LENGTH = 74;
-const HOOK_ORIGIN_Y = 20;
+const INITIAL_ROPE_LENGTH = 68;
+const HOOK_SWING_DEGREES = 50;
+const HOOK_SWING_DURATION_MS = 1900;
+const HOOK_CAPTURE_PADDING = 12;
+const MAX_MAGNET_DISTANCE = 84;
 
 const NORMAL_MOTION = {
   lock: 130,
@@ -56,16 +70,25 @@ interface PendingCatch {
   requestId: string;
 }
 
+interface GemGeometry {
+  gem: FoodGem;
+  centerX: number;
+  centerY: number;
+  radius: number;
+  angle: number;
+  distance: number;
+}
+
 interface GemTarget {
   gem: FoodGem;
   angle: number;
   ropeLength: number;
 }
 
-interface PathCandidate extends GemTarget {
+interface PathCandidate extends GemGeometry {
   alongPath: number;
   distanceToPath: number;
-  hitRadius: number;
+  captureRadius: number;
   intersectsPath: boolean;
   firstContactDistance: number;
 }
@@ -133,7 +156,7 @@ export default function GameCanvas({
 
   useEffect(() => {
     return () => {
-      // Invalidates any unfinished async animation sequence after unmount.
+      // Cancel any unfinished async animation sequence after unmount.
       animationRunRef.current += 1;
     };
   }, []);
@@ -154,7 +177,12 @@ export default function GameCanvas({
     const start = performance.now();
 
     const animate = (now: number) => {
-      const angle = 47 * Math.sin(((now - start) / 1800) * Math.PI * 2);
+      const angle =
+        HOOK_SWING_DEGREES *
+        Math.sin(
+          ((now - start) / HOOK_SWING_DURATION_MS) * Math.PI * 2,
+        );
+
       angleRef.current = angle;
 
       if (hookArmRef.current) {
@@ -170,95 +198,142 @@ export default function GameCanvas({
     return () => cancelAnimationFrame(animationFrame);
   }, [phase, prefersReducedMotion]);
 
-  function targetForEntry(entry: (typeof gemEntries)[number]): GemTarget {
+  function getHookOrigin() {
     const canvas = canvasRef.current;
-    if (!canvas) {
+    const hookArm = hookArmRef.current;
+
+    if (!canvas || !hookArm) {
       throw new Error("Game canvas is not ready");
     }
 
-    const rect = canvas.getBoundingClientRect();
-    const originX = rect.width / 2;
-    const targetX = (entry.position.x / 100) * rect.width;
-    const targetY = (entry.position.y / 100) * rect.height;
-    const dx = targetX - originX;
-    const dy = targetY - HOOK_ORIGIN_Y;
+    const canvasRect = canvas.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(hookArm);
+
+    // Read the untransformed CSS pivot. getBoundingClientRect() would return
+    // the rotated bounding box and therefore move the apparent origin while
+    // the hook swings.
+    const originX =
+      Number.parseFloat(computedStyle.left) || canvasRect.width / 2;
+    const originY =
+  Number.parseFloat(computedStyle.top) || 120;
+
+    return {
+      canvas,
+      canvasRect,
+      originX,
+      originY,
+    };
+  }
+
+  function getGemGeometry(gem: FoodGem): GemGeometry {
+    const { canvas, canvasRect, originX, originY } = getHookOrigin();
+    const entry = gemEntries.find(
+      (item) => item.gem.gem_id === gem.gem_id,
+    );
+
+    if (!entry) {
+      throw new Error("The selected food Gem is no longer available");
+    }
+
+    // Measure the actual designer card rather than assuming that the wrapper's
+    // percentage point is its visual centre. This keeps collision detection in
+    // sync with gem-card-default.svg and with responsive scaling.
+    const card = canvas.querySelector<HTMLElement>(
+      `[data-gem-id="${gem.gem_id}"] .gem-card-hitbox`,
+    );
+
+    let centerX: number;
+    let centerY: number;
+    let radius: number;
+
+    if (card) {
+      const cardRect = card.getBoundingClientRect();
+      centerX = cardRect.left - canvasRect.left + cardRect.width / 2;
+      centerY = cardRect.top - canvasRect.top + cardRect.height / 2;
+      radius = Math.min(cardRect.width, cardRect.height) * 0.42;
+    } else {
+      centerX = (entry.position.x / 100) * canvasRect.width;
+      centerY = (entry.position.y / 100) * canvasRect.height;
+      radius = 40 * (entry.position.scale ?? 1);
+    }
+
+    const dx = centerX - originX;
+    const dy = centerY - originY;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     return {
       gem: entry.gem,
+      centerX,
+      centerY,
+      radius,
       // CSS positive rotation turns a downward rope toward the LEFT.
       // Therefore a target on the right needs a negative CSS angle.
       angle: -(Math.atan2(dx, dy) * 180) / Math.PI,
-      // Stop slightly before the centre because the hook head extends below
-      // the rope and visually overlaps the Gem orb.
-      ropeLength: Math.max(INITIAL_ROPE_LENGTH, distance - 28),
+      distance,
+    };
+  }
+
+  function targetForGem(gem: FoodGem): GemTarget {
+    const geometry = getGemGeometry(gem);
+
+    return {
+      gem: geometry.gem,
+      angle: geometry.angle,
+      // Stop before the card centre because the hook head and the visible card
+      // both extend beyond the end of the rope.
+      ropeLength: Math.max(
+        INITIAL_ROPE_LENGTH,
+        geometry.distance - Math.max(30, geometry.radius * 0.72),
+      ),
     };
   }
 
   function findClosestGem(): GemTarget {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      throw new Error("Game canvas is not ready");
-    }
-
     if (gemEntries.length === 0) {
       throw new Error("No food Gems are available");
     }
 
-    const rect = canvas.getBoundingClientRect();
-    const originX = rect.width / 2;
-    const originY = HOOK_ORIGIN_Y;
+    const { originX, originY } = getHookOrigin();
+    const radians = (angleRef.current * Math.PI) / 180;
 
     // The unrotated rope points straight down. With CSS rotation theta,
-    // its screen-space direction is (-sin(theta), cos(theta)).
-    // This sign convention is important: a visually right-facing rope has
-    // a negative CSS angle.
-    const radians = (angleRef.current * Math.PI) / 180;
+    // screen-space direction is (-sin(theta), cos(theta)).
     const directionX = -Math.sin(radians);
     const directionY = Math.cos(radians);
 
-    const candidates: PathCandidate[] = gemEntries.map((entry) => {
-      const target = targetForEntry(entry);
-      const targetX = (entry.position.x / 100) * rect.width;
-      const targetY = (entry.position.y / 100) * rect.height;
-      const vectorX = targetX - originX;
-      const vectorY = targetY - originY;
+    const candidates: PathCandidate[] = gemEntries.map(({ gem }) => {
+      const geometry = getGemGeometry(gem);
+      const vectorX = geometry.centerX - originX;
+      const vectorY = geometry.centerY - originY;
 
-      // Projection onto the hook ray. Positive values are in front of the
-      // hook; negative values are behind it.
       const alongPath =
         vectorX * directionX + vectorY * directionY;
 
-      // Magnitude of the 2D cross product. Because the direction vector is
-      // normalized, this is the perpendicular pixel distance from the Gem
-      // centre to the hook's travel path.
       const distanceToPath = Math.abs(
         vectorX * directionY - vectorY * directionX,
       );
 
-      // The visible orb is approximately 64 x 56 px. Include part of the
-      // hook head as a forgiving hit box so the daily catch still succeeds.
-      const hitRadius = 40 * (entry.position.scale ?? 1);
+      const captureRadius = geometry.radius + HOOK_CAPTURE_PADDING;
       const intersectsPath =
-        alongPath >= INITIAL_ROPE_LENGTH * 0.5 &&
-        distanceToPath <= hitRadius;
+        alongPath >= INITIAL_ROPE_LENGTH * 0.55 &&
+        distanceToPath <= captureRadius;
 
       const firstContactDistance = intersectsPath
         ? alongPath -
           Math.sqrt(
             Math.max(
               0,
-              hitRadius * hitRadius -
+              captureRadius * captureRadius -
                 distanceToPath * distanceToPath,
             ),
           )
         : Number.POSITIVE_INFINITY;
 
       return {
-        ...target,
+        ...geometry,
         alongPath,
         distanceToPath,
-        hitRadius,
+        captureRadius,
         intersectsPath,
         firstContactDistance,
       };
@@ -272,8 +347,8 @@ export default function GameCanvas({
       throw new Error("No food Gems are in front of the hook");
     }
 
-    // Physical rule: if the hook ray actually crosses one or more Gem hit
-    // circles, catch the FIRST one encountered while the rope extends.
+    // Gold-miner rule: if the hook ray intersects one or more cards, catch the
+    // first card encountered while extending.
     const directHits = inFront
       .filter((candidate) => candidate.intersectsPath)
       .sort(
@@ -281,34 +356,59 @@ export default function GameCanvas({
           a.firstContactDistance - b.firstContactDistance,
       );
 
-    if (directHits.length > 0) {
-      return directHits[0];
+    const selected =
+      directHits[0] ??
+      // Guaranteed-catch assist: if the hook narrowly misses all cards, attach
+      // to the card closest to the real hook path, not to a distant card whose
+      // centre merely has a similar angle.
+      inFront
+        .filter(
+          (candidate) =>
+            candidate.distanceToPath <= MAX_MAGNET_DISTANCE,
+        )
+        .sort((a, b) => {
+          const pathDifference =
+            a.distanceToPath - b.distanceToPath;
+
+          if (Math.abs(pathDifference) > 0.5) {
+            return pathDifference;
+          }
+
+          return a.alongPath - b.alongPath;
+        })[0] ??
+      inFront.sort((a, b) => {
+        const pathDifference =
+          a.distanceToPath - b.distanceToPath;
+
+        if (Math.abs(pathDifference) > 0.5) {
+          return pathDifference;
+        }
+
+        return a.alongPath - b.alongPath;
+      })[0];
+
+    if (import.meta.env.DEV) {
+      console.debug("[Food Miner] catch target", {
+        clickedCssAngle: Number(angleRef.current.toFixed(1)),
+        selected: selected.gem.label,
+        directHit: selected.intersectsPath,
+        distanceToPath: Number(selected.distanceToPath.toFixed(1)),
+      });
     }
 
-    // Guaranteed-catch assist: if the ray narrowly misses every orb, choose
-    // the Gem whose centre is closest to the actual hook path. Only then use
-    // distance along the path as a tie-breaker. The hook gently aligns to that
-    // Gem during the short locking phase.
-    return inFront.sort((a, b) => {
-      const pathDifference =
-        a.distanceToPath - b.distanceToPath;
-
-      if (Math.abs(pathDifference) > 0.001) {
-        return pathDifference;
-      }
-
-      return a.alongPath - b.alongPath;
-    })[0];
+    return targetForGem(selected.gem);
   }
 
   function findTargetForGem(gemId: string): GemTarget {
-    const entry = gemEntries.find((item) => item.gem.gem_id === gemId);
+    const entry = gemEntries.find(
+      (item) => item.gem.gem_id === gemId,
+    );
 
     if (!entry) {
       throw new Error("The selected food Gem is no longer available");
     }
 
-    return targetForEntry(entry);
+    return targetForGem(entry.gem);
   }
 
   async function executeCatch(existing?: PendingCatch) {
@@ -347,8 +447,9 @@ export default function GameCanvas({
     setAttached(false);
     setPhase("locking");
 
-    // Attach rejection handling immediately so a quick network failure does not
-    // become an unhandled Promise rejection while the animation is playing.
+    // Start the API request and the animation at the same time. The same
+    // requestId is reused on Retry, so a temporary network failure cannot
+    // consume the user's single catch twice.
     const responsePromise = onCatch(
       selected.gem.gem_id,
       selected.requestId,
@@ -364,31 +465,24 @@ export default function GameCanvas({
     };
 
     try {
-      // 1. Freeze and gently align to the chosen target.
       await wait(motion.lock);
       ensureCurrentRun();
 
-      // 2. Drop quickly toward the selected Gem.
       setRopeLength(target.ropeLength);
       setPhase("extending");
       await wait(motion.extend);
       ensureCurrentRun();
 
-      // 3. Snap the Gem onto the hook with a short visual pop.
       setAttached(true);
       setPhase("attached");
       await wait(motion.attach);
       ensureCurrentRun();
 
-      // 4. Pull the captured Gem upward more slowly to create weight and
-      // anticipation.
       setRopeLength(INITIAL_ROPE_LENGTH);
       setPhase("retracting");
       await wait(motion.retract);
       ensureCurrentRun();
 
-      // 5. The hook has returned. If the API is still running, hold this state
-      // briefly instead of skipping the animation.
       setPhase("verifying");
       const result = await responsePromise;
       ensureCurrentRun();
@@ -420,7 +514,10 @@ export default function GameCanvas({
     }
   }
 
-  const selectedGem = gems.find((gem) => gem.gem_id === selectedGemId);
+  const selectedGem = gems.find(
+    (gem) => gem.gem_id === selectedGemId,
+  );
+
   const selectedIconUrl = selectedGem
     ? resolveCategoryAsset(selectedGem.icon_asset_id)
     : null;
@@ -434,11 +531,14 @@ export default function GameCanvas({
 
   const capturedAnchorStyle: CSSProperties | undefined = selectedGem
     ? {
-        // Counter-rotate the prize so the food icon remains upright while the
-        // complete hook arm is angled toward the Gem.
+        // Keep the captured card upright while the complete hook arm is angled.
         transform: `translateX(-50%) rotate(${-targetAngle}deg)`,
       }
     : undefined;
+
+  // Switch the cat as soon as the game locks onto a cuisine, matching the
+  // selected-state artwork from the designer mock-up.
+  const catIsExcited = selectedGemId !== null && phase !== "ready";
 
   return (
     <section className="game-section" aria-labelledby="game-title">
@@ -453,11 +553,37 @@ export default function GameCanvas({
         ref={canvasRef}
         aria-busy={phase !== "ready"}
       >
-        <div className="mine-sky" aria-hidden="true">
-          <span>⚽</span>
-          <span>✨</span>
-          <span>🏟️</span>
-        </div>
+        <img
+          src={catchFieldUrl}
+          alt=""
+          className="catch-field-art"
+          aria-hidden="true"
+          draggable={false}
+        />
+
+        <img
+          src={catIdleUrl}
+          alt=""
+          className={[
+            "miner-cat-art",
+            "miner-cat-idle",
+            catIsExcited ? "is-hidden" : "is-visible",
+          ].join(" ")}
+          aria-hidden="true"
+          draggable={false}
+        />
+
+        <img
+          src={catExcitedUrl}
+          alt=""
+          className={[
+            "miner-cat-art",
+            "miner-cat-excited",
+            catIsExcited ? "is-visible" : "is-hidden",
+          ].join(" ")}
+          aria-hidden="true"
+          draggable={false}
+        />
 
         <div
           ref={hookArmRef}
@@ -469,27 +595,58 @@ export default function GameCanvas({
             className="hook-rope"
             style={{ height: `${ropeLength}px` }}
           >
-            <div className="hook-head">🪝</div>
+            <div className="hook-head">
+  <img
+    src={hookHeadUrl}
+    alt=""
+    className="hook-head-image"
+    aria-hidden="true"
+    draggable={false}
+  />
+</div>
 
             {attached && selectedGem && (
-              <span
-                className="captured-gem-anchor"
-                style={capturedAnchorStyle}
-              >
-                <span className="captured-gem-orb">
-                  {selectedIconUrl ? (
-                    <img
-                      className="captured-gem-image"
-                      src={selectedIconUrl}
-                      alt=""
-                    />
-                  ) : (
-                    <span aria-hidden="true">
-                      {CATEGORY_EMOJI[selectedGem.label]}
-                    </span>
-                  )}
+              <>
+                <span className="capture-sparkles">
+                  <i>✦</i>
+                  <i>✦</i>
+                  <i>✦</i>
                 </span>
-              </span>
+
+                <span
+                  className={`captured-gem-anchor captured-${selectedGem.gem_type}`}
+                  style={capturedAnchorStyle}
+                >
+                  <span className="captured-gem-card">
+                    <img
+                      src={gemCardSelectedUrl}
+                      alt=""
+                      className="captured-gem-frame"
+                      aria-hidden="true"
+                      draggable={false}
+                    />
+
+                    <span className="captured-gem-icon" aria-hidden="true">
+                      {selectedIconUrl ? (
+                        <img
+                          className="captured-gem-image"
+                          src={selectedIconUrl}
+                          alt=""
+                          draggable={false}
+                        />
+                      ) : (
+                        <span>
+                          {CATEGORY_EMOJI[selectedGem.label]}
+                        </span>
+                      )}
+                    </span>
+
+                    <span className="captured-gem-label">
+                      {selectedGem.label}
+                    </span>
+                  </span>
+                </span>
+              </>
             )}
           </div>
         </div>
@@ -509,8 +666,6 @@ export default function GameCanvas({
             />
           );
         })}
-
-        <div className="mine-floor" aria-hidden="true" />
       </div>
 
       <p className="catch-status" aria-live="polite">

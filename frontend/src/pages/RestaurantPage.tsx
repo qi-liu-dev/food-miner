@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getRestaurant } from "../api/client";
 import type { RestaurantPageResponse } from "../api/types";
@@ -12,17 +12,29 @@ export default function RestaurantPage() {
   const navigate = useNavigate();
   const { restaurantId } = useParams();
   const [searchParams] = useSearchParams();
-  const [restaurant, setRestaurant] = useState<RestaurantPageResponse | null>(null);
+  const [restaurant, setRestaurant] = useState<RestaurantPageResponse | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!restaurantId) return;
+
     void getRestaurant(restaurantId, searchParams.get("deal"))
       .then(setRestaurant)
       .catch((caughtError) =>
-        setError(caughtError instanceof Error ? caughtError.message : "Unable to load restaurant"),
+        setError(
+          caughtError instanceof Error
+            ? caughtError.message
+            : "Unable to load restaurant",
+        ),
       );
   }, [restaurantId, searchParams]);
+
+  const recommendedMeal = useMemo(
+    () => restaurant?.menu.find((meal) => meal.is_recommended) ?? null,
+    [restaurant],
+  );
 
   if (error) {
     return (
@@ -43,8 +55,16 @@ export default function RestaurantPage() {
   return (
     <MobileShell>
       <header className="restaurant-header">
-        <button className="icon-button" onClick={() => navigate("/")} aria-label="Back">←</button>
-        <button className="icon-button" aria-label="Favourite">♡</button>
+        <button
+          className="icon-button"
+          onClick={() => navigate("/")}
+          aria-label="Back"
+        >
+          ←
+        </button>
+        <button className="icon-button" aria-label="Favourite">
+          ♡
+        </button>
       </header>
 
       <section className="restaurant-hero">
@@ -61,25 +81,36 @@ export default function RestaurantPage() {
           <span>✓</span>
           <div>
             <strong>Food Miner discount applied</strong>
-            <p>{restaurant.discount_percent}% off Emma&apos;s recommended meal.</p>
+            <p>
+              {restaurant.discount_percent}% off Emma&apos;s recommended meal.
+            </p>
           </div>
         </section>
       )}
 
-      <section className="menu-section">
+      <section className="menu-section restaurant-menu-with-cart">
         <h2>Menu</h2>
+
         {restaurant.menu.map((meal) => {
           const visual = getMealVisual(meal.image_asset_id);
           const imageUrl = resolveFoodAsset(meal.image_asset_id);
+
           return (
             <article
               key={meal.meal_id}
-              className={`menu-item ${meal.is_recommended ? "recommended" : ""}`}
+              className={`menu-item ${
+                meal.is_recommended ? "recommended" : ""
+              }`}
             >
               <div className="menu-copy">
-                {meal.is_recommended && <span className="recommended-badge">Your Food Miner pick</span>}
+                {meal.is_recommended && (
+                  <span className="recommended-badge">
+                    Your Food Miner pick
+                  </span>
+                )}
                 <h3>{meal.name}</h3>
                 <p>Popular · prepared fresh</p>
+
                 <div className="menu-price">
                   {meal.discounted_price_eur != null ? (
                     <>
@@ -90,8 +121,23 @@ export default function RestaurantPage() {
                     <strong>€{meal.price_eur.toFixed(2)}</strong>
                   )}
                 </div>
-                <button className="add-button">Add</button>
+
+                {meal.quantity_in_cart > 0 ? (
+                  <div
+                    className="added-item-control"
+                    aria-label={`${meal.quantity_in_cart} item added to cart`}
+                  >
+                    <span aria-hidden="true">✓</span>
+                    <strong>Added</strong>
+                    <span>{meal.quantity_in_cart}</span>
+                  </div>
+                ) : (
+                  <button className="add-button" disabled>
+                    Add
+                  </button>
+                )}
               </div>
+
               <div className="menu-image" style={{ background: visual.gradient }}>
                 {imageUrl ? (
                   <img src={imageUrl} alt={meal.name} />
@@ -104,12 +150,36 @@ export default function RestaurantPage() {
         })}
       </section>
 
-      <button
-        className="sticky-order-button"
-        onClick={() => window.alert("Mock checkout: the Food Miner discount remains applied.")}
-      >
-        View order
-      </button>
+      {restaurant.cart_ready && restaurant.game_id && recommendedMeal && (
+        <button
+          className="view-cart-bar"
+          onClick={() => navigate(`/cart/${restaurant.game_id}`)}
+          aria-label="View cart"
+        >
+          <span className="view-cart-icon" aria-hidden="true">
+            🛒
+          </span>
+
+          <span className="view-cart-copy">
+            <strong>View cart</strong>
+            <small>
+              {recommendedMeal.discounted_price_eur != null && (
+                <del>€{recommendedMeal.price_eur.toFixed(2)}</del>
+              )}{" "}
+              €
+              {(
+                recommendedMeal.discounted_price_eur ??
+                recommendedMeal.price_eur
+              ).toFixed(2)}{" "}
+              incl. fees
+            </small>
+          </span>
+
+          <span className="view-cart-count">
+            {recommendedMeal.quantity_in_cart || 1}
+          </span>
+        </button>
+      )}
     </MobileShell>
   );
 }
