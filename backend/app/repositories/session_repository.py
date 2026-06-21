@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -130,8 +129,8 @@ class SessionRepository:
                     return session
                 raise ConflictError("This user has already used today's catch")
 
-            if session.status == SessionStatus.CLAIMED:
-                raise ConflictError("This game session has already been claimed")
+            if session.status in {SessionStatus.CLAIMED, SessionStatus.ORDERED}:
+                raise ConflictError("This game session can no longer be caught")
 
             if gem_id not in session.payload.deals_by_gem:
                 raise ValidationError("The selected gem is not part of this game")
@@ -173,7 +172,8 @@ class SessionRepository:
             if session.status == SessionStatus.READY:
                 raise ConflictError("Catch a gem before claiming a discount")
 
-            if session.status == SessionStatus.CLAIMED:
+            # Claim is idempotent, including after the order has been placed.
+            if session.status in {SessionStatus.CLAIMED, SessionStatus.ORDERED}:
                 connection.commit()
                 return session
 

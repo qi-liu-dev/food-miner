@@ -25,7 +25,13 @@ Uber Eats Home
 → one guaranteed catch
 → one concrete meal/restaurant discount reveal
 → claim that exact discount
-→ corresponding restaurant page with discount applied
+→ corresponding restaurant page, item automatically in cart
+→ View cart
+→ Order Summary
+→ Place order
+→ order is stored in SQLite and becomes future recommendation history
+→ short confirmation
+→ return to Uber Eats Home
 ```
 
 ## Frozen rules
@@ -40,3 +46,7 @@ Uber Eats Home
 - Gem labels must be exact values from the approved taxonomy.
 - Claim endpoint does not accept an arbitrary deal ID.
 - Claim redirects only to the restaurant bound to the caught Gem.
+- Claiming the discount automatically places the recommended item in a one-item cart.
+- The cart price, discount and restaurant are always derived server-side.
+- Only a successful `Place order` action is written into runtime order history.
+- `Place order` is idempotent: repeated clicks return the same order.

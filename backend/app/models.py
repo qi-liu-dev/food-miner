@@ -58,6 +58,11 @@ class SessionStatus(str, Enum):
     READY = "READY"
     CAUGHT = "CAUGHT"
     CLAIMED = "CLAIMED"
+    ORDERED = "ORDERED"
+
+
+class OrderStatus(str, Enum):
+    ORDERED = "ORDERED"
 
 
 class User(BaseModel):
@@ -195,6 +200,26 @@ class StoredGameSession(BaseModel):
     created_at: str
 
 
+class StoredOrder(BaseModel):
+    order_id: str
+    game_id: str
+    user_id: str
+    meal_id: str
+    meal_name: str
+    restaurant_id: str
+    restaurant_name: str
+    primary_category: CategoryLabel
+    tags: list[str]
+    quantity: int = 1
+    price_before: float
+    discount_percent: int
+    discount_amount: float
+    final_amount: float
+    delivery_minutes: int
+    status: OrderStatus = OrderStatus.ORDERED
+    ordered_at: str
+
+
 class CreateGameRequest(BaseModel):
     user_id: str
 
@@ -245,16 +270,67 @@ class RestaurantMenuItem(BaseModel):
     price_eur: float
     discounted_price_eur: float | None = None
     is_recommended: bool = False
+    quantity_in_cart: int = 0
 
 
 class RestaurantPageResponse(BaseModel):
     restaurant_id: str
     restaurant_name: str
     primary_category: CategoryLabel
+    game_id: str | None = None
     discount_percent: int | None = None
     discount_applied: bool = False
+    cart_ready: bool = False
     recommended_meal_id: str | None = None
     menu: list[RestaurantMenuItem]
+
+
+class CartRestaurant(BaseModel):
+    restaurant_id: str
+    name: str
+    primary_category: CategoryLabel
+
+
+class CartItem(BaseModel):
+    meal_id: str
+    name: str
+    image_asset_id: str
+    quantity: int = 1
+    price_before: float
+    discount_percent: int
+    discount_amount: float
+    price_after: float
+
+
+class CartFees(BaseModel):
+    delivery_fee: float = 0.0
+    service_fee: float = 0.0
+
+
+class CartResponse(BaseModel):
+    game_id: str
+    status: SessionStatus
+    restaurant: CartRestaurant
+    item: CartItem
+    fees: CartFees
+    total: float
+
+
+class PlaceOrderResponse(BaseModel):
+    order_id: str
+    game_id: str
+    status: OrderStatus
+    restaurant_name: str
+    meal_name: str
+    final_amount: float
+    estimated_delivery: str
+    ordered_at: str
+
+
+class OrderHistoryResponse(BaseModel):
+    user_id: str
+    count: int
+    orders: list[OrderHistoryRecord]
 
 
 class HealthResponse(BaseModel):

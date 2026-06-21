@@ -16,8 +16,10 @@ from ..models import (
     StoredGameSession,
 )
 from ..repositories.mock_repository import MockRepository
+from ..repositories.order_repository import OrderRepository
 from ..repositories.session_repository import SessionRepository
 from ..taxonomy import category_slug
+from .checkout_engine import CheckoutEngine
 from .gem_label_generator import GemLabelGenerator
 from .profile_builder import build_user_profile
 from .recommender import build_deal, hard_filter, score_candidates, select_diverse_candidates
@@ -28,10 +30,13 @@ class GameEngine:
         self,
         data_repository: MockRepository,
         session_repository: SessionRepository,
+        order_repository: OrderRepository,
         demo_day: str | None = None,
     ):
         self.data = data_repository
         self.sessions = session_repository
+        self.orders = order_repository
+        self.checkout = CheckoutEngine(session_repository, order_repository)
         self.demo_day = demo_day
         allowed_labels = {item.label.value for item in self.data.get_category_catalog()}
         self.label_generator = GemLabelGenerator(allowed_labels)
@@ -65,7 +70,13 @@ class GameEngine:
         if existing:
             return self._to_response(existing, user.display_name)
 
-        profile = build_user_profile(user, self.data.get_orders(user_id), self._today())
+        # Seed history comes from JSON. Successfully placed demo orders come
+        # from SQLite and are included in future profile construction.
+        history = [
+            *self.data.get_orders(user_id),
+            *self.orders.get_history_records(user_id),
+        ]
+        profile = build_user_profile(user, history, self._today())
         restaurants = self.data.get_restaurants()
         restaurants_by_id = {item.restaurant_id: item for item in restaurants}
         eligible_meals = hard_filter(profile, self.data.get_meals(), restaurants_by_id)
@@ -109,6 +120,18 @@ class GameEngine:
         stored = self.sessions.create(session)
         return self._to_response(stored, user.display_name)
 
+    def get_cart(self, game_id: str):
+        return self.checkout.get_cart(game_id)
+
+    def place_order(self, game_id: str):
+        return self.checkout.place_order(game_id)
+
+    def get_order_history(self, user_id: str):
+        return [
+            *self.data.get_orders(user_id),
+            *self.orders.get_history_records(user_id),
+        ]
+
     def catch(self, game_id: str, gem_id: str, request_id: str) -> CatchResponse:
         session = self.sessions.catch(game_id, gem_id, request_id)
         if session.caught_gem_id is None:
@@ -129,7 +152,8 @@ class GameEngine:
             raise RuntimeError("Claimed session is incomplete")
         deal = session.payload.deals_by_gem[session.caught_gem_id]
         redirect_path = (
-            f"/restaurants/{deal.restaurant_id}?deal={session.discount_token}"
+            f"/restaurants/{deal.restaurant_id}"
+            f"?deal={session.discount_token}&game={session.game_id}"
         )
         return ClaimResponse(
             game_id=session.game_id,
@@ -144,9 +168,14 @@ class GameEngine:
         redirect = None
         if session.caught_gem_id:
             revealed = session.payload.deals_by_gem[session.caught_gem_id]
-        if session.status == SessionStatus.CLAIMED and revealed and session.discount_token:
+        if (
+            session.status in {SessionStatus.CLAIMED, SessionStatus.ORDERED}
+            and revealed
+            and session.discount_token
+        ):
             redirect = (
-                f"/restaurants/{revealed.restaurant_id}?deal={session.discount_token}"
+                f"/restaurants/{revealed.restaurant_id}"
+                f"?deal={session.discount_token}&game={session.game_id}"
             )
         return GameSessionResponse(
             game_id=session.game_id,
