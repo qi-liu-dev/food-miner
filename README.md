@@ -4,6 +4,10 @@ A gamified, personalized meal-discovery prototype built for the **Hack4Her Uber 
 
 Food Miner helps an already logged-in Uber Eats user quickly decide what to eat. The backend generates six personalized food-category Gems from the user’s order history, Uber campaign priorities, restaurant availability, and restaurant-side promotion needs. The user watches the hook, catches one Gem, reveals one concrete restaurant deal, claims that deal, and completes a simplified order flow.
 
+## Demo
+
+[Watch the Food Miner demo on Google Drive](https://drive.google.com/file/d/1r0u-v4Y-Js3-Pr7K-YvIEEwhYUEG8i_g/view)
+
 ## Final Product Rules
 
 1. Food Miner is an optional entry point on the Uber Eats home page.
